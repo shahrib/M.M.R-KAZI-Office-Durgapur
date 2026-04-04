@@ -34,12 +34,18 @@ export default function Navbar({ onAuthClick }: NavbarProps) {
 
   const handleScrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
-    const targetId = href.replace('#', '');
+    const targetId = href.substring(1);
     const elem = document.getElementById(targetId);
+    
     if (elem) {
-      elem.scrollIntoView({ behavior: 'smooth' });
+      // Close mobile menu
+      setIsOpen(false);
+      
+      // Scroll to element
+      setTimeout(() => {
+        elem.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
     }
-    setIsOpen(false);
   };
 
   const navLinks = [
