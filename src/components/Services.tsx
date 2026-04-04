@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { FileText, FileX, Users, Award } from 'lucide-react';
+import { FileText, FileX, Users, Award, Scale } from 'lucide-react';
 
 export default function Services() {
   const services = [
@@ -26,6 +26,12 @@ export default function Services() {
       desc: 'Issuance of official seals and signatures validated by the MMR Board for all legal purposes.',
       icon: Award,
       color: 'bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400'
+    },
+    {
+      title: 'Faraid',
+      desc: 'Islamic system of inheritance law, prescribing fixed shares of a deceased Muslim’s assets to specific relatives (heirs) based on the Quran and Sunnah.',
+      icon: Scale,
+      color: 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400'
     }
   ];
 

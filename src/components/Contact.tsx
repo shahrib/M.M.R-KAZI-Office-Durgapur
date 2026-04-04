@@ -57,7 +57,7 @@ export default function Contact() {
                     <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Office Location</p>
                     <p className="text-lg font-medium text-gray-900 dark:text-white">
                       City Centre Court Durgapur,<br />
-                      Landmark Near Pal Hotel
+                      Near Pal Hotel
                     </p>
                   </div>
                 </div>
@@ -92,7 +92,7 @@ export default function Contact() {
             className="relative h-[450px] rounded-2xl overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800"
           >
             <iframe 
-              src="https://maps.google.com/maps?q=City%20Centre%20Court%20Durgapur,%20Landmark%20Near%20Pal%20Hotel&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+              src="https://maps.google.com/maps?q=City%20Centre%20Court%20Durgapur,%20Near%20Pal%20Hotel&t=&z=15&ie=UTF8&iwloc=&output=embed" 
               width="100%" 
               height="100%" 
               style={{ border: 0 }} 
