@@ -56,8 +56,8 @@ export default function Contact() {
                   <div>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Office Location</p>
                     <p className="text-lg font-medium text-gray-900 dark:text-white">
-                      City Centre, Beside Court<br />
-                      Durgapur, Paschim Bardhaman
+                      City Centre Court Durgapur,<br />
+                      Landmark Near Pal Hotel
                     </p>
                   </div>
                 </div>
@@ -92,7 +92,7 @@ export default function Contact() {
             className="relative h-[450px] rounded-2xl overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800"
           >
             <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.481232812345!2d87.2995!3d23.5505!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f7710000000000%3A0x0!2sCity%20Centre%2C%20Durgapur!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
+              src="https://maps.google.com/maps?q=City%20Centre%20Court%20Durgapur,%20Landmark%20Near%20Pal%20Hotel&t=&z=15&ie=UTF8&iwloc=&output=embed" 
               width="100%" 
               height="100%" 
               style={{ border: 0 }} 
@@ -104,7 +104,7 @@ export default function Contact() {
             
             <div className="absolute bottom-0 left-0 w-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm p-6 border-t border-gray-100 dark:border-slate-800">
               <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                <span className="font-bold text-primary dark:text-accent">Address:</span> City Centre, Beside Court, Durgapur, Paschim Bardhaman, West Bengal
+                <span className="font-bold text-primary dark:text-accent">Location :-</span> Durgapur City Centre Rakh Khali.
               </p>
             </div>
           </motion.div>

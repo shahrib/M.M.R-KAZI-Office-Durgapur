@@ -6,7 +6,7 @@ import Services from './components/Services';
 import Appointment from './components/Appointment';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-import WhatsAppButton from './components/WhatsAppButton';
+import FloatingButtons from './components/WhatsAppButton';
 import AuthModal from './components/AuthModal';
 
 export default function App() {
@@ -28,7 +28,7 @@ export default function App() {
 
       <Footer />
       
-      <WhatsAppButton />
+      <FloatingButtons />
       
       <AuthModal 
         isOpen={isAuthOpen} 

@@ -1,27 +1,52 @@
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, Instagram, Facebook } from 'lucide-react';
 import { motion } from 'motion/react';
 
-export default function WhatsAppButton() {
-  const phoneNumber = '6290540892';
+export default function FloatingButtons() {
+  const phoneNumber = '916290540892';
   const message = 'Hello, I would like to inquire about your marriage registration services.';
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
   return (
-    <motion.a
-      href={whatsappUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      initial={{ scale: 0, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.9 }}
-      className="fixed bottom-8 right-8 z-40 bg-[#25D366] text-white p-4 rounded-full shadow-2xl flex items-center justify-center group"
-      aria-label="Chat on WhatsApp"
-    >
-      <MessageCircle className="w-8 h-8" />
-      <span className="max-w-0 overflow-hidden group-hover:max-w-xs group-hover:ml-2 transition-all duration-300 font-medium whitespace-nowrap">
-        Chat with us
-      </span>
-    </motion.a>
+    <div className="fixed bottom-8 right-8 z-50 flex flex-col gap-4">
+      <motion.a
+        href={whatsappUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        className="bg-[#25D366] text-white p-4 rounded-full shadow-2xl flex items-center justify-center"
+        aria-label="Chat on WhatsApp"
+      >
+        <MessageCircle className="w-8 h-8" />
+      </motion.a>
+      <motion.a
+        href="https://www.instagram.com/kazi_office_durgapur"
+        target="_blank"
+        rel="noopener noreferrer"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        className="bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 text-white p-4 rounded-full shadow-2xl flex items-center justify-center"
+        aria-label="Instagram"
+      >
+        <Instagram className="w-8 h-8" />
+      </motion.a>
+      <motion.a
+        href="https://www.facebook.com/share/1Z6huK8cgx/"
+        target="_blank"
+        rel="noopener noreferrer"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        className="bg-[#1877F2] text-white p-4 rounded-full shadow-2xl flex items-center justify-center"
+        aria-label="Facebook"
+      >
+        <Facebook className="w-8 h-8" />
+      </motion.a>
+    </div>
   );
 }

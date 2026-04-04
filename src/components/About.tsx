@@ -36,9 +36,9 @@ export default function About() {
                   />
                 </div>
               </div>
-              <div className="absolute -bottom-6 -right-6 bg-primary p-6 rounded-sm shadow-xl hidden md:block border-2 border-secondary/30">
-                <p className="text-white font-serif text-xl font-bold mb-1">Tousif Ahamed</p>
-                <p className="text-emerald-200 text-xs tracking-widest uppercase">Official Marriage Registrar & Kazi</p>
+              <div className="absolute -bottom-4 right-2 md:-bottom-6 md:-right-6 bg-primary p-4 md:p-6 rounded-sm shadow-xl border-2 border-secondary/30 z-20 max-w-[85%] md:max-w-none">
+                <p className="text-white font-serif text-lg md:text-xl font-bold mb-1">Tousif Ahamed</p>
+                <p className="text-emerald-200 text-[10px] md:text-xs tracking-widest uppercase">DEPUTY M.M.R & KAZI</p>
               </div>
             </div>
 
@@ -54,9 +54,12 @@ export default function About() {
                   />
                 </div>
               </div>
-              <div className="absolute -bottom-6 -right-6 bg-primary p-6 rounded-sm shadow-xl hidden md:block border-2 border-secondary/30">
-                <p className="text-white font-serif text-xl font-bold mb-1">Sk Md Rafique</p>
-                <p className="text-emerald-200 text-xs tracking-widest uppercase">Senior Kazi</p>
+              <div className="absolute -bottom-4 right-2 md:-bottom-6 md:-right-6 bg-primary p-4 md:p-6 rounded-sm shadow-xl border-2 border-secondary/30 z-20 max-w-[90%] md:max-w-sm">
+                <p className="text-white font-serif text-lg md:text-xl font-bold mb-1">Sk Md Rafique</p>
+                <p className="text-emerald-200 text-[10px] md:text-xs tracking-widest uppercase mb-2">Senior Kazi</p>
+                <p className="text-emerald-100/80 text-[10px] md:text-xs leading-relaxed">
+                  Official Muhammadin Marriage Registrar and Kazi for Durgapur City Centre, authorized by the West Bengal Muhammadan Marriage Registrar Board.
+                </p>
               </div>
             </div>
           </motion.div>
