@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Mail, Lock, User, Phone, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -9,6 +10,7 @@ interface AuthModalProps {
 
 export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [isLogin, setIsLogin] = useState(true);
+  const { t } = useLanguage();
 
   return (
     <AnimatePresence>
@@ -46,8 +48,8 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               </div>
               <p className="text-emerald-100 text-sm italic font-serif relative z-10">
                 {isLogin 
-                  ? 'Access your official registration records' 
-                  : 'Register for official marriage & divorce services'}
+                  ? t('auth.loginDesc') 
+                  : t('auth.registerDesc')}
               </p>
             </div>
 
@@ -56,12 +58,12 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
                 {!isLogin && (
                   <div className="space-y-1">
-                    <label className="text-xs font-bold text-primary dark:text-gray-300 uppercase tracking-widest">Full Name</label>
+                    <label className="text-xs font-bold text-primary dark:text-gray-300 uppercase tracking-widest">{t('auth.name')}</label>
                     <div className="relative">
                       <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary/50" />
                       <input 
                         type="text" 
-                        placeholder="Enter full name"
+                        placeholder={t('auth.namePlaceholder')}
                         className="w-full pl-10 pr-4 py-4 rounded-sm border-2 border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-secondary outline-none transition-all font-serif dark:text-white"
                       />
                     </div>
@@ -69,12 +71,12 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 )}
 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-primary dark:text-gray-300 uppercase tracking-widest">Email Address</label>
+                  <label className="text-xs font-bold text-primary dark:text-gray-300 uppercase tracking-widest">{t('auth.email')}</label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary/50" />
                     <input 
                       type="email" 
-                      placeholder="name@example.com"
+                      placeholder={t('auth.emailPlaceholder')}
                       className="w-full pl-10 pr-4 py-4 rounded-sm border-2 border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-secondary outline-none transition-all font-serif dark:text-white"
                     />
                   </div>
@@ -82,12 +84,12 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
                 {!isLogin && (
                   <div className="space-y-1">
-                    <label className="text-xs font-bold text-primary dark:text-gray-300 uppercase tracking-widest">Mobile Number</label>
+                    <label className="text-xs font-bold text-primary dark:text-gray-300 uppercase tracking-widest">{t('auth.phone')}</label>
                     <div className="relative">
                       <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary/50" />
                       <input 
                         type="tel" 
-                        placeholder="+91 00000 00000"
+                        placeholder={t('auth.phonePlaceholder')}
                         className="w-full pl-10 pr-4 py-4 rounded-sm border-2 border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-secondary outline-none transition-all font-serif dark:text-white"
                       />
                     </div>
@@ -95,7 +97,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 )}
 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-primary dark:text-gray-300 uppercase tracking-widest">Password</label>
+                  <label className="text-xs font-bold text-primary dark:text-gray-300 uppercase tracking-widest">{t('auth.password')}</label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary/50" />
                     <input 
@@ -108,24 +110,24 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
                 {isLogin && (
                   <div className="text-right">
-                    <button type="button" className="text-xs text-secondary font-bold hover:underline uppercase tracking-tighter">Forgot password?</button>
+                    <button type="button" className="text-xs text-secondary font-bold hover:underline uppercase tracking-tighter">{t('auth.forgot')}</button>
                   </div>
                 )}
 
                 <button className="w-full bg-primary text-white py-4 rounded-sm font-serif text-lg hover:bg-emerald-900 transition-all shadow-lg flex items-center justify-center gap-3 group border-2 border-secondary/20">
-                  {isLogin ? 'Login' : 'Register'}
+                  {isLogin ? t('auth.loginBtn') : t('auth.registerBtn')}
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
               </form>
 
               <div className="mt-6 text-center">
                 <p className="text-gray-600 italic font-serif">
-                  {isLogin ? "Don't have an account?" : "Already have an account?"}{' '}
+                  {isLogin ? t('auth.noAccount') : t('auth.hasAccount')}{' '}
                   <button 
                     onClick={() => setIsLogin(!isLogin)}
                     className="text-secondary font-bold hover:underline"
                   >
-                    {isLogin ? 'Register here' : 'Login here'}
+                    {isLogin ? t('auth.registerLink') : t('auth.loginLink')}
                   </button>
                 </p>
               </div>

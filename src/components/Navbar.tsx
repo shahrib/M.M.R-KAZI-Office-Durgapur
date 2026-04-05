@@ -8,9 +8,11 @@ import {
   Briefcase, 
   Phone, 
   User,
-  MessageCircle
+  Globe
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useLanguage } from '../contexts/LanguageContext';
+import { Language } from '../translations';
 
 interface NavbarProps {
   onAuthClick: () => void;
@@ -20,6 +22,8 @@ export default function Navbar({ onAuthClick }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isLangOpen, setIsLangOpen] = useState(false);
+  const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -49,9 +53,14 @@ export default function Navbar({ onAuthClick }: NavbarProps) {
   };
 
   const navLinks = [
-    { name: 'Home', href: '#home', icon: Home },
-    { name: 'Services', href: '#services', icon: Briefcase },
-    { name: 'Contact', href: '#contact', icon: Phone },
+    { name: t('nav.home'), href: '#home', icon: Home },
+    { name: t('nav.services'), href: '#services', icon: Briefcase },
+    { name: t('nav.contact'), href: '#contact', icon: Phone },
+  ];
+
+  const languages: { code: Language; label: string }[] = [
+    { code: 'en', label: 'English' },
+    { code: 'bn', label: 'বাংলা' },
   ];
 
   return (
@@ -85,6 +94,42 @@ export default function Navbar({ onAuthClick }: NavbarProps) {
               </a>
             ))}
             
+            <div className="relative">
+              <button
+                onClick={() => setIsLangOpen(!isLangOpen)}
+                className="flex items-center gap-1 text-gray-700 dark:text-gray-200 hover:text-primary dark:hover:text-accent font-medium transition-colors"
+              >
+                <Globe className="w-5 h-5" />
+                <span className="uppercase">{language}</span>
+              </button>
+              
+              <AnimatePresence>
+                {isLangOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute right-0 mt-2 w-32 bg-white dark:bg-slate-900 rounded-md shadow-lg border border-gray-100 dark:border-slate-800 overflow-hidden"
+                  >
+                    {languages.map((lang) => (
+                      <button
+                        key={lang.code}
+                        onClick={() => {
+                          setLanguage(lang.code);
+                          setIsLangOpen(false);
+                        }}
+                        className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-slate-800 ${
+                          language === lang.code ? 'text-primary dark:text-accent font-bold' : 'text-gray-700 dark:text-gray-200'
+                        }`}
+                      >
+                        {lang.label}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
             <button
               onClick={toggleTheme}
               className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
@@ -98,12 +143,23 @@ export default function Navbar({ onAuthClick }: NavbarProps) {
               className="bg-primary text-white px-6 py-2 rounded-md font-serif hover:bg-emerald-900 transition-all shadow-md flex items-center gap-2"
             >
               <User className="w-4 h-4" />
-              Login / Register
+              {t('nav.login')}
             </button>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-4">
+            <button
+              onClick={() => {
+                const currentIndex = languages.findIndex(l => l.code === language);
+                const nextIndex = (currentIndex + 1) % languages.length;
+                setLanguage(languages[nextIndex].code);
+              }}
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-1"
+            >
+              <Globe className="w-5 h-5 text-primary dark:text-accent" />
+              <span className="text-xs font-bold uppercase text-gray-700 dark:text-gray-200">{language}</span>
+            </button>
             <button
               onClick={toggleTheme}
               className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
@@ -149,7 +205,7 @@ export default function Navbar({ onAuthClick }: NavbarProps) {
                 className="w-full mt-4 bg-primary text-white px-6 py-3 rounded-md font-serif flex items-center justify-center gap-2"
               >
                 <User className="w-5 h-5" />
-                Login / Register
+                {t('nav.login')}
               </button>
             </div>
           </motion.div>

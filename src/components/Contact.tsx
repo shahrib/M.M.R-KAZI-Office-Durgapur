@@ -1,7 +1,10 @@
 import { motion } from 'motion/react';
 import { Phone, Mail, MapPin, Clock, ExternalLink } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function Contact() {
+  const { t } = useLanguage();
+
   return (
     <section id="contact" className="py-24 bg-white dark:bg-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -12,7 +15,7 @@ export default function Contact() {
             viewport={{ once: true }}
             className="text-3xl md:text-5xl font-serif font-bold text-primary dark:text-white mb-4"
           >
-            Contact & Location
+            {t('contact.title')}
           </motion.h2>
           <div className="w-24 h-1 bg-secondary mx-auto mb-6" />
         </div>
@@ -26,7 +29,7 @@ export default function Contact() {
             className="space-y-8"
           >
             <div className="bg-ambient dark:bg-slate-800 p-8 rounded-2xl border border-gray-100 dark:border-slate-700">
-              <h3 className="text-2xl font-serif font-bold text-primary dark:text-white mb-8">Get in Touch</h3>
+              <h3 className="text-2xl font-serif font-bold text-primary dark:text-white mb-8">{t('contact.getInTouch')}</h3>
               
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
@@ -34,7 +37,7 @@ export default function Contact() {
                     <Phone className="w-5 h-5 text-primary dark:text-accent" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Tousif Ahamed (WhatsApp)</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Tousif Ahamed ({t('contact.whatsapp')})</p>
                     <p className="text-lg font-medium text-gray-900 dark:text-white">6290540892</p>
                   </div>
                 </div>
@@ -54,10 +57,10 @@ export default function Contact() {
                     <MapPin className="w-5 h-5 text-primary dark:text-accent" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Office Location</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('contact.officeLoc')}</p>
                     <p className="text-lg font-medium text-gray-900 dark:text-white">
-                      City Centre Court Durgapur,<br />
-                      Near Pal Hotel
+                      {t('contact.address1')}<br />
+                      {t('contact.address2')}
                     </p>
                   </div>
                 </div>
@@ -67,10 +70,10 @@ export default function Contact() {
                     <Clock className="w-5 h-5 text-primary dark:text-accent" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Office Hours</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('contact.officeHours')}</p>
                     <p className="text-lg font-medium text-gray-900 dark:text-white">
-                      10:00 AM - 12:00 PM<br />
-                      Every Day
+                      {t('contact.time')}<br />
+                      {t('contact.days')}
                     </p>
                   </div>
                 </div>
@@ -104,7 +107,7 @@ export default function Contact() {
             
             <div className="absolute bottom-0 left-0 w-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm p-6 border-t border-gray-100 dark:border-slate-800">
               <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                <span className="font-bold text-primary dark:text-accent">Location :-</span> Durgapur City Centre Rakh Khali.
+                <span className="font-bold text-primary dark:text-accent">{t('contact.locationLabel')}</span> {t('contact.locationValue')}
               </p>
             </div>
           </motion.div>

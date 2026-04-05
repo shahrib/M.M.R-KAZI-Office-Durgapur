@@ -1,35 +1,38 @@
 import { motion } from 'motion/react';
 import { FileText, FileX, Users, Award, Scale } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function Services() {
+  const { t } = useLanguage();
+
   const services = [
     {
-      title: 'Marriage Registration',
-      desc: 'Official registration of Nikah with government-validated certificates. We ensure all legal requirements are met.',
+      title: t('services.s1.title'),
+      desc: t('services.s1.desc'),
       icon: FileText,
       color: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400'
     },
     {
-      title: 'Divorce Registration',
-      desc: 'Professional and formal divorce registration services with proper documentation and official certification.',
+      title: t('services.s2.title'),
+      desc: t('services.s2.desc'),
       icon: FileX,
       color: 'bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400'
     },
     {
-      title: 'Kazi Services',
-      desc: 'Traditional Kazi services for conducting Nikah ceremonies and providing religious guidance on marital matters.',
+      title: t('services.s3.title'),
+      desc: t('services.s3.desc'),
       icon: Users,
       color: 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400'
     },
     {
-      title: 'Official Certification',
-      desc: 'Issuance of official seals and signatures validated by the MMR Board for all legal purposes.',
+      title: t('services.s4.title'),
+      desc: t('services.s4.desc'),
       icon: Award,
       color: 'bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400'
     },
     {
-      title: 'Faraid',
-      desc: 'Islamic system of inheritance law, prescribing fixed shares of a deceased Muslim’s assets to specific relatives (heirs) based on the Quran and Sunnah.',
+      title: t('services.s5.title'),
+      desc: t('services.s5.desc'),
       icon: Scale,
       color: 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400'
     }
@@ -46,12 +49,11 @@ export default function Services() {
             viewport={{ once: true }}
             className="text-3xl md:text-5xl font-serif font-bold text-primary dark:text-white mb-4"
           >
-            Our Services
+            {t('services.title')}
           </motion.h2>
           <div className="w-24 h-1 bg-secondary mx-auto mb-6" />
           <p className="max-w-2xl mx-auto text-gray-700 dark:text-gray-400 font-serif italic">
-            "We provide a comprehensive range of official registration services, 
-            ensuring every step is handled with professionalism and traditional respect."
+            {t('services.desc')}
           </p>
         </div>
 

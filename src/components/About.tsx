@@ -1,6 +1,9 @@
 import { motion } from 'motion/react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function About() {
+  const { t } = useLanguage();
+
   return (
     <section id="about" className="py-24 bg-ambient dark:bg-slate-950 relative overflow-hidden">
       <div className="absolute inset-0 islamic-pattern pointer-events-none" />
@@ -12,7 +15,7 @@ export default function About() {
             viewport={{ once: true }}
             className="text-3xl md:text-5xl font-serif font-bold text-primary dark:text-white mb-4"
           >
-            About Our Office
+            {t('about.title')}
           </motion.h2>
           <div className="w-24 h-1 bg-secondary mx-auto mb-6" />
         </div>
@@ -75,8 +78,10 @@ export default function About() {
             </h3>
             <div className="space-y-6 text-gray-600 dark:text-gray-400 leading-relaxed">
               <p>
-                Official Muhammadan Marriage And Divorce Registrar & Kazi for Durgapur City Centre, 
-                authorized by the West Bengal Muhammadan Marriage Registrar Board.
+                {t('about.p1')}
+              </p>
+              <p>
+                {t('about.p2')}
               </p>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">

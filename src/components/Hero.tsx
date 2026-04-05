@@ -1,12 +1,15 @@
 import { motion } from 'motion/react';
 import { ScrollText, Heart, ShieldCheck } from 'lucide-react';
 import ImageBanner from './ImageBanner';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface HeroProps {
   onAuthClick: () => void;
 }
 
 export default function Hero({ onAuthClick }: HeroProps) {
+  const { t } = useLanguage();
+
   return (
     <section id="home" className="relative min-h-screen flex flex-col justify-center pt-20 overflow-hidden">
       {/* Background with Overlay */}
@@ -41,15 +44,14 @@ export default function Hero({ onAuthClick }: HeroProps) {
               <div className="flex items-center justify-center gap-4 mb-4">
                 <div className="h-[1px] w-12 bg-secondary" />
                 <span className="text-secondary font-medium tracking-[0.3em] uppercase text-sm">
-                  Official Seal & Services
+                  {t('hero.seal')}
                 </span>
                 <div className="h-[1px] w-12 bg-secondary" />
               </div>
             </div>
             
             <p className="max-w-2xl mx-auto text-xl text-gray-700 dark:text-gray-300 mb-10 font-serif italic">
-              "Official Marriage & Divorce Registration Services. Providing authentic, 
-              legally binding, and traditional registration for the community with honor and integrity."
+              {t('hero.desc')}
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
@@ -57,13 +59,13 @@ export default function Hero({ onAuthClick }: HeroProps) {
                 onClick={onAuthClick}
                 className="w-full sm:w-auto bg-primary text-white px-12 py-4 rounded-md font-serif text-xl hover:bg-emerald-900 transition-all shadow-xl hover:scale-105 active:scale-95 border-2 border-secondary/20"
               >
-                Register Now
+                {t('hero.register')}
               </button>
               <a 
                 href="#services"
                 className="w-full sm:w-auto bg-white/80 dark:bg-slate-900 text-primary dark:text-accent border-2 border-primary/20 px-12 py-4 rounded-md font-serif text-xl hover:bg-gray-50 dark:hover:bg-slate-800 transition-all"
               >
-                Our Services
+                {t('hero.ourServices')}
               </a>
             </div>
           </motion.div>
@@ -84,9 +86,9 @@ export default function Hero({ onAuthClick }: HeroProps) {
             className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24"
           >
             {[
-              { icon: ScrollText, title: 'Official Registration', desc: 'Government authorized marriage & divorce certificates.' },
-              { icon: Heart, title: 'Traditional Values', desc: 'Conducted according to traditional Muhammadan laws.' },
-              { icon: ShieldCheck, title: 'Secure & Private', desc: 'Your personal data and records are handled with utmost care.' },
+              { icon: ScrollText, title: t('hero.feat1.title'), desc: t('hero.feat1.desc') },
+              { icon: Heart, title: t('hero.feat2.title'), desc: t('hero.feat2.desc') },
+              { icon: ShieldCheck, title: t('hero.feat3.title'), desc: t('hero.feat3.desc') },
             ].map((feature, idx) => (
               <div key={idx} className="p-6 rounded-xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm border border-secondary/10 hover:border-secondary/30 transition-all group">
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">

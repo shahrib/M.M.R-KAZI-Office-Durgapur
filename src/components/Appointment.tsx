@@ -1,7 +1,10 @@
 import { motion } from 'motion/react';
 import { Calendar, Clock, Send } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function Appointment() {
+  const { t } = useLanguage();
+
   return (
     <section id="appointment" className="py-24 bg-ambient dark:bg-slate-950 relative overflow-hidden">
       <div className="absolute inset-0 islamic-pattern pointer-events-none" />
@@ -13,13 +16,13 @@ export default function Appointment() {
             viewport={{ once: true }}
             className="text-3xl md:text-5xl font-serif font-bold text-primary dark:text-white mb-4"
           >
-            Book an Appointment
+            {t('appointment.title')}
           </motion.h2>
           <div className="w-24 h-1 bg-secondary mx-auto mb-6" />
           
           <div className="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-slate-800 border-2 border-secondary/20 text-secondary rounded-sm text-sm font-bold shadow-sm">
             <Clock className="w-4 h-4" />
-            Office Hours: 10:00 AM - 12:00 PM (Every Day)
+            {t('appointment.hours')}
           </div>
         </div>
 
@@ -36,44 +39,44 @@ export default function Appointment() {
           
           <form className="grid grid-cols-1 md:grid-cols-2 gap-8" onSubmit={(e) => e.preventDefault()}>
             <div className="space-y-2">
-              <label className="text-sm font-bold text-primary dark:text-gray-300 uppercase tracking-widest">Full Name</label>
+              <label className="text-sm font-bold text-primary dark:text-gray-300 uppercase tracking-widest">{t('appointment.name')}</label>
               <input 
                 type="text" 
-                placeholder="Enter your name"
+                placeholder={t('appointment.namePlaceholder')}
                 className="w-full px-4 py-4 rounded-sm border-2 border-gray-100 dark:border-slate-700 bg-ambient dark:bg-slate-800 focus:border-secondary outline-none transition-all font-serif dark:text-white"
               />
             </div>
             
             <div className="space-y-2">
-              <label className="text-sm font-bold text-primary dark:text-gray-300 uppercase tracking-widest">Email Address</label>
+              <label className="text-sm font-bold text-primary dark:text-gray-300 uppercase tracking-widest">{t('appointment.email')}</label>
               <input 
                 type="email" 
-                placeholder="Enter your email"
+                placeholder={t('appointment.emailPlaceholder')}
                 className="w-full px-4 py-4 rounded-sm border-2 border-gray-100 dark:border-slate-700 bg-ambient dark:bg-slate-800 focus:border-secondary outline-none transition-all font-serif dark:text-white"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-bold text-primary dark:text-gray-300 uppercase tracking-widest">Mobile Number</label>
+              <label className="text-sm font-bold text-primary dark:text-gray-300 uppercase tracking-widest">{t('appointment.phone')}</label>
               <input 
                 type="tel" 
-                placeholder="Enter mobile number"
+                placeholder={t('appointment.phonePlaceholder')}
                 className="w-full px-4 py-4 rounded-sm border-2 border-gray-100 dark:border-slate-700 bg-ambient dark:bg-slate-800 focus:border-secondary outline-none transition-all font-serif dark:text-white"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-bold text-primary dark:text-gray-300 uppercase tracking-widest">Service Type</label>
+              <label className="text-sm font-bold text-primary dark:text-gray-300 uppercase tracking-widest">{t('appointment.serviceType')}</label>
               <select className="w-full px-4 py-4 rounded-sm border-2 border-gray-100 dark:border-slate-700 bg-ambient dark:bg-slate-800 focus:border-secondary outline-none transition-all font-serif appearance-none dark:text-white">
-                <option>Marriage Registration</option>
-                <option>Divorce Registration</option>
-                <option>Kazi Consultation</option>
-                <option>Other Services</option>
+                <option>{t('appointment.service1')}</option>
+                <option>{t('appointment.service2')}</option>
+                <option>{t('appointment.service3')}</option>
+                <option>{t('appointment.service4')}</option>
               </select>
             </div>
 
             <div className="md:col-span-2 space-y-2">
-              <label className="text-sm font-bold text-primary dark:text-gray-300 uppercase tracking-widest">Preferred Date</label>
+              <label className="text-sm font-bold text-primary dark:text-gray-300 uppercase tracking-widest">{t('appointment.date')}</label>
               <div className="relative">
                 <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary" />
                 <input 
@@ -85,11 +88,11 @@ export default function Appointment() {
 
             <div className="md:col-span-2 mt-6">
               <button className="w-full bg-primary text-white py-5 rounded-sm font-serif text-2xl hover:bg-emerald-900 transition-all shadow-lg flex items-center justify-center gap-4 group border-2 border-secondary/20">
-                Submit Booking Request
+                {t('appointment.submit')}
                 <Send className="w-6 h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
               </button>
               <p className="text-center text-sm text-gray-500 mt-6 italic font-serif">
-                * We will contact you via mobile to confirm your appointment.
+                {t('appointment.note')}
               </p>
             </div>
           </form>

@@ -1,6 +1,9 @@
 import { Instagram, Facebook } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function Footer() {
+  const { t } = useLanguage();
+
   return (
     <footer className="bg-primary dark:bg-slate-950 text-white py-16 islamic-pattern border-t-4 border-secondary">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -15,14 +18,13 @@ export default function Footer() {
           </div>
           
           <p className="text-emerald-100/70 max-w-md mb-10 italic font-serif">
-            "Providing official, legal, and traditional registration services 
-            for the community with honor and integrity since 2004."
+            {t('footer.desc')}
           </p>
 
           <div className="w-full h-[1px] bg-white/10 mb-8" />
 
           <div className="flex flex-col md:flex-row justify-between items-center w-full gap-6 text-sm text-emerald-100/50">
-            <p>© 2024 M.M.R & KAZI Office Durgapur</p>
+            <p>{t('footer.copy')}</p>
             <div className="flex gap-6">
               <a href="https://www.instagram.com/kazi_office_durgapur" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors" aria-label="Instagram">
                 <Instagram className="w-5 h-5" />
@@ -31,7 +33,7 @@ export default function Footer() {
                 <Facebook className="w-5 h-5" />
               </a>
             </div>
-            <p>Authorized by MMR West Bengal</p>
+            <p>{t('footer.auth')}</p>
           </div>
         </div>
       </div>
