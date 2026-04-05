@@ -1,16 +1,47 @@
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Mail, Lock, User, Phone, ArrowRight } from 'lucide-react';
-import { useState } from 'react';
+import { X, Mail, Lock, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onLoginSuccess: (user: any) => void;
 }
 
-export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
-  const [isLogin, setIsLogin] = useState(true);
+export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModalProps) {
   const { t } = useLanguage();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        onLoginSuccess(data.user);
+        onClose();
+      } else {
+        setError(data.message || 'Login failed');
+      }
+    } catch (err) {
+      setError('Connection error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -47,26 +78,16 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 />
               </div>
               <p className="text-emerald-100 text-sm italic font-serif relative z-10">
-                {isLogin 
-                  ? t('auth.loginDesc') 
-                  : t('auth.registerDesc')}
+                {t('auth.loginDesc')}
               </p>
             </div>
 
             {/* Form */}
             <div className="p-6 sm:p-8 bg-ambient dark:bg-slate-900">
-              <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-                {!isLogin && (
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-primary dark:text-gray-300 uppercase tracking-widest">{t('auth.name')}</label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary/50" />
-                      <input 
-                        type="text" 
-                        placeholder={t('auth.namePlaceholder')}
-                        className="w-full pl-10 pr-4 py-4 rounded-sm border-2 border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-secondary outline-none transition-all font-serif dark:text-white"
-                      />
-                    </div>
+              <form className="space-y-4" onSubmit={handleSubmit}>
+                {error && (
+                  <div className="p-3 bg-red-50 border border-red-100 text-red-600 text-xs rounded-sm font-serif italic">
+                    {error}
                   </div>
                 )}
 
@@ -76,25 +97,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary/50" />
                     <input 
                       type="email" 
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       placeholder={t('auth.emailPlaceholder')}
                       className="w-full pl-10 pr-4 py-4 rounded-sm border-2 border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-secondary outline-none transition-all font-serif dark:text-white"
                     />
                   </div>
                 </div>
-
-                {!isLogin && (
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-primary dark:text-gray-300 uppercase tracking-widest">{t('auth.phone')}</label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary/50" />
-                      <input 
-                        type="tel" 
-                        placeholder={t('auth.phonePlaceholder')}
-                        className="w-full pl-10 pr-4 py-4 rounded-sm border-2 border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-secondary outline-none transition-all font-serif dark:text-white"
-                      />
-                    </div>
-                  </div>
-                )}
 
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-primary dark:text-gray-300 uppercase tracking-widest">{t('auth.password')}</label>
@@ -102,33 +112,32 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary/50" />
                     <input 
                       type="password" 
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
                       className="w-full pl-10 pr-4 py-4 rounded-sm border-2 border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-secondary outline-none transition-all font-serif dark:text-white"
                     />
                   </div>
                 </div>
 
-                {isLogin && (
-                  <div className="text-right">
-                    <button type="button" className="text-xs text-secondary font-bold hover:underline uppercase tracking-tighter">{t('auth.forgot')}</button>
-                  </div>
-                )}
+                <div className="text-right">
+                  <button type="button" className="text-xs text-secondary font-bold hover:underline uppercase tracking-tighter">{t('auth.forgot')}</button>
+                </div>
 
-                <button className="w-full bg-primary text-white py-4 rounded-sm font-serif text-lg hover:bg-emerald-900 transition-all shadow-lg flex items-center justify-center gap-3 group border-2 border-secondary/20">
-                  {isLogin ? t('auth.loginBtn') : t('auth.registerBtn')}
+                <button 
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-primary text-white py-4 rounded-sm font-serif text-lg hover:bg-emerald-900 transition-all shadow-lg flex items-center justify-center gap-3 group border-2 border-secondary/20 disabled:opacity-50"
+                >
+                  {loading ? 'Logging in...' : t('auth.loginBtn')}
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
               </form>
 
               <div className="mt-6 text-center">
-                <p className="text-gray-600 italic font-serif">
-                  {isLogin ? t('auth.noAccount') : t('auth.hasAccount')}{' '}
-                  <button 
-                    onClick={() => setIsLogin(!isLogin)}
-                    className="text-secondary font-bold hover:underline"
-                  >
-                    {isLogin ? t('auth.registerLink') : t('auth.loginLink')}
-                  </button>
+                <p className="text-xs text-gray-500 italic font-serif">
+                  Registration is currently restricted to administrators.
                 </p>
               </div>
             </div>
@@ -138,3 +147,4 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     </AnimatePresence>
   );
 }
+

@@ -8,7 +8,8 @@ import {
   Briefcase, 
   Phone, 
   User,
-  Globe
+  Globe,
+  LogOut
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -16,9 +17,12 @@ import { Language } from '../translations';
 
 interface NavbarProps {
   onAuthClick: () => void;
+  isAdmin: boolean;
+  onAdminPanelClick: () => void;
+  onLogout: () => void;
 }
 
-export default function Navbar({ onAuthClick }: NavbarProps) {
+export default function Navbar({ onAuthClick, isAdmin, onAdminPanelClick, onLogout }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -138,13 +142,30 @@ export default function Navbar({ onAuthClick }: NavbarProps) {
               {isDark ? <Sun className="w-5 h-5 text-accent" /> : <Moon className="w-5 h-5 text-primary" />}
             </button>
 
-            <button
-              onClick={onAuthClick}
-              className="bg-primary text-white px-6 py-2 rounded-md font-serif hover:bg-emerald-900 transition-all shadow-md flex items-center gap-2"
-            >
-              <User className="w-4 h-4" />
-              {t('nav.login')}
-            </button>
+            {isAdmin ? (
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={onAdminPanelClick}
+                  className="bg-accent text-primary px-6 py-2 rounded-md font-serif font-bold hover:bg-accent/80 transition-all shadow-md flex items-center gap-2"
+                >
+                  Admin Panel
+                </button>
+                <button
+                  onClick={onLogout}
+                  className="text-gray-700 dark:text-gray-200 hover:text-red-600 transition-colors"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={onAuthClick}
+                className="bg-primary text-white px-6 py-2 rounded-md font-serif hover:bg-emerald-900 transition-all shadow-md flex items-center gap-2"
+              >
+                <User className="w-4 h-4" />
+                {t('nav.login')}
+              </button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -197,16 +218,41 @@ export default function Navbar({ onAuthClick }: NavbarProps) {
                   {link.name}
                 </a>
               ))}
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  onAuthClick();
-                }}
-                className="w-full mt-4 bg-primary text-white px-6 py-3 rounded-md font-serif flex items-center justify-center gap-2"
-              >
-                <User className="w-5 h-5" />
-                {t('nav.login')}
-              </button>
+              
+              {isAdmin ? (
+                <div className="pt-4 space-y-2">
+                  <button
+                    onClick={() => {
+                      setIsOpen(false);
+                      onAdminPanelClick();
+                    }}
+                    className="w-full bg-accent text-primary px-6 py-3 rounded-md font-serif font-bold flex items-center justify-center gap-2 shadow-md"
+                  >
+                    Admin Panel
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsOpen(false);
+                      onLogout();
+                    }}
+                    className="w-full text-red-600 px-6 py-3 rounded-md font-medium flex items-center justify-center gap-2 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors"
+                  >
+                    <LogOut className="w-5 h-5" />
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => {
+                    setIsOpen(false);
+                    onAuthClick();
+                  }}
+                  className="w-full mt-4 bg-primary text-white px-6 py-3 rounded-md font-serif flex items-center justify-center gap-2"
+                >
+                  <User className="w-5 h-5" />
+                  {t('nav.login')}
+                </button>
+              )}
             </div>
           </motion.div>
         )}
