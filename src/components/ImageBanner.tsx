@@ -15,11 +15,11 @@ export default function ImageBanner() {
 
   return (
     <div className="w-full overflow-hidden bg-ambient dark:bg-slate-950 py-10 border-y border-secondary/10">
-      <div className="relative flex">
+      <div className="relative flex px-3">
         <motion.div
-          className="flex gap-6 px-3"
+          className="flex gap-6 pr-6"
           animate={{
-            x: ['-50%', '0%'],
+            x: ['-50%', 0],
           }}
           transition={{
             duration: 40,
