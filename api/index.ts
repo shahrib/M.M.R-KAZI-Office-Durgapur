@@ -9,7 +9,10 @@ import { convertDocxToPdfViaCloudConvert } from "../src/services/pdfConversionSe
 import { readFileBuffer, resolveStoragePath, saveBase64File } from "../src/services/storageService.js";
 
 const app = express();
-const JWT_SECRET = process.env.JWT_SECRET || "super-secret-kazi-key";
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error("Missing required environment variable: JWT_SECRET");
+}
 
 app.use(express.json({ limit: "30mb" }));
 app.use(cookieParser());

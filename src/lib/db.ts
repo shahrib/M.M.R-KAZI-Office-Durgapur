@@ -1,10 +1,38 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-import dotenv from "dotenv";
+const MONGODB_URI = process.env.MONGODB_URI;
+if (!MONGODB_URI) {
+  throw new Error("Missing required environment variable: MONGODB_URI");
+}
 
-dotenv.config();
+const userSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    role: { type: String, default: "admin" }
+  },
+  { timestamps: true }
+);
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/kazi-office";
+const templateSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true, trim: true },
+    fileId: { type: mongoose.Schema.Types.ObjectId, required: true },
+    mimeType: { type: String, required: true },
+    schema: [
+      {
+        key: { type: String, required: true },
+        type: { type: String, enum: ["text", "image", "date", "number"], required: true },
+        label: { type: String, required: true },
+        required: { type: Boolean, default: true }
+      }
+    ],
+    status: { type: String, enum: ["active", "archived"], default: "active" },
+    createdBy: { type: String, required: true }
+  },
+  { timestamps: true }
+);
 
 const userSchema = new mongoose.Schema(
   {
