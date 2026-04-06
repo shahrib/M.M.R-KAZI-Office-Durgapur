@@ -1,22 +1,39 @@
-# Muhammadan Marriage & Divorce Registrar — Admin (MongoDB-first Test Flow)
+# Muhammadan Marriage & Divorce Registrar — Production Admin Automation
 
-Current implementation is simplified for testing on Vercel constraints:
+This project now includes a production-ready admin document automation workflow:
 
-- Manual DOCX template upload to **MongoDB** (base64 stored in DB).
-- Optional **test placeholder schema** toggle during upload.
-- Dynamic form generation from stored schema.
-- Generate filled DOCX and save generated output in MongoDB.
-- Manual PDF upload to MongoDB (not backend filesystem).
+- Upload DOCX templates with `{{placeholder}}` fields.
+- Auto-detect required fields and infer input types.
+- Generate dynamic forms from template schema.
+- Fill DOCX templates from admin input.
+- Convert DOCX to PDF via CloudConvert API (Vercel-compatible).
+- Store and preview generated PDFs.
+- Upload manual PDFs into backend folder (`storage/manual-pdf-uploads`).
 
-## API modules
+## Architecture
 
-- `api/index.ts` -> auth + templates + documents + manual-pdf APIs
-- `src/lib/db.ts` -> Mongo models (`Template`, `GeneratedDocument`, `ManualPdf`)
-- `src/services/templateEngineService.ts` -> DOCX placeholder parse/render logic
-- `src/web/admin/` -> dedicated admin web workspace UI
+- `api/` → Auth + template/document API endpoints
+- `src/lib/` → DB + placeholder/schema logic
+- `src/services/` → template rendering, conversion, storage services
+- `src/components/` → production admin UI
 
-## Notes
+## Setup
 
-- No local `storage/` bucket dependency is used anymore.
-- Files are served directly from MongoDB-backed APIs.
-- `useTestPlaceholders` is available for testing until all templates are uploaded and verified.
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Configure environment in `.env` using `.env.example`:
+   - `MONGODB_URI`
+   - `JWT_SECRET`
+   - `CLOUDCONVERT_API_KEY`
+3. Run locally:
+   ```bash
+   npm run dev
+   ```
+
+## Important Notes
+
+- Placeholder mapping is **only** placeholder-driven (`{{field_key}}`), no hardcoded coordinates.
+- Image placeholders are currently validated and stored; fill output uses text replacement strategy suitable for URL/path insertion.
+- For production image embedding in DOCX, connect `docxtemplater + image module` in `src/services/templateEngineService.ts`.
