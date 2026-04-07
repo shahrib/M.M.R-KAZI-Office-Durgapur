@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import bcrypt from "bcryptjs";
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
+import rateLimit from "express-rate-limit";
 import { connectDB, User, Template, Appointment } from "../src/lib/db.js";
 
 const app = express();
@@ -171,16 +172,32 @@ app.post("/api/templates/:id/generate", async (req, res) => {
 
 // --- Appointment Routes ---
 
+const appointmentLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // Limit each IP to 5 requests per `window` (here, per 15 minutes)
+  message: { message: "Too many appointment requests from this IP, please try again after 15 minutes." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 // Create appointment (Public)
-app.post("/api/appointments", async (req, res) => {
+app.post("/api/appointments", appointmentLimiter, async (req, res) => {
   try {
-    const { name, phone, service, date, time, message } = req.body;
+    const { name, email, phone, service, date, time, message } = req.body;
     if (!name || !phone || !service || !date || !time) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
+    if (!/^\d{10}$/.test(phone)) {
+      return res.status(400).json({ message: "Phone number must be exactly 10 digits" });
+    }
+
+    if (email && !email.includes('@')) {
+      return res.status(400).json({ message: "Valid email is required" });
+    }
+
     const appointment = new Appointment({
-      name, phone, service, date, time, message
+      name, email, phone, service, date, time, message
     });
     await appointment.save();
     
@@ -241,6 +258,24 @@ app.patch("/api/appointments/:id/status", async (req, res) => {
     if (!appointment) return res.status(404).json({ message: "Appointment not found" });
 
     res.json({ message: "Status updated", appointment });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Delete appointment (Admin only)
+app.delete("/api/appointments/:id", async (req, res) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ message: "Not authenticated" });
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as any;
+    if (decoded.role !== "admin") return res.status(403).json({ message: "Not authorized" });
+
+    const appointment = await Appointment.findByIdAndDelete(req.params.id);
+    if (!appointment) return res.status(404).json({ message: "Appointment not found" });
+
+    res.json({ message: "Appointment deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }

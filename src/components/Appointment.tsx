@@ -23,6 +23,17 @@ export default function Appointment() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!/^\d{10}$/.test(formData.phone)) {
+      setError('Phone number must be exactly 10 digits.');
+      return;
+    }
+
+    if (formData.email && !formData.email.includes('@')) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
     setSubmitting(true);
     setError('');
     
@@ -146,6 +157,9 @@ export default function Appointment() {
                   value={formData.phone}
                   onChange={handleChange}
                   required
+                  maxLength={10}
+                  pattern="\d{10}"
+                  title="Phone number must be exactly 10 digits"
                   placeholder={t('appointment.phonePlaceholder')}
                   className="w-full px-4 py-4 rounded-sm border-2 border-gray-100 dark:border-slate-700 bg-ambient dark:bg-slate-800 focus:border-secondary outline-none transition-all font-serif dark:text-white"
                 />

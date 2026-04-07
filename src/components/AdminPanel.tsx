@@ -16,7 +16,10 @@ import {
   FilePlus,
   CheckCircle2,
   Clock,
-  ArrowLeft
+  ArrowLeft,
+  Sun,
+  Moon,
+  Trash2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import DocumentGenerator from './DocumentGenerator';
@@ -40,6 +43,12 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
   const [notificationPermission, setNotificationPermission] = useState(
     'Notification' in window ? Notification.permission : 'denied'
   );
+  const [isDark, setIsDark] = useState(document.documentElement.classList.contains('dark'));
+
+  const toggleTheme = () => {
+    setIsDark(!isDark);
+    document.documentElement.classList.toggle('dark');
+  };
 
   const fetchAppointments = async () => {
     try {
@@ -112,6 +121,19 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
     }
   };
 
+  const deleteAppointment = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this appointment?")) return;
+    try {
+      await fetch(`/api/appointments/${id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      fetchAppointments();
+    } catch (error) {
+      console.error('Failed to delete appointment:', error);
+    }
+  };
+
   const stats = [
     { label: 'Total Registrations', value: '1,284', icon: FileText, color: 'text-blue-600', bg: 'bg-blue-50' },
     { label: 'Pending Appointments', value: appointments.filter(a => a.status === 'Pending').length.toString(), icon: Calendar, color: 'text-amber-600', bg: 'bg-amber-50' },
@@ -127,7 +149,7 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 flex transition-colors duration-200">
       {/* Mobile Backdrop */}
       {isMobileMenuOpen && (
         <div 
@@ -137,18 +159,18 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 lg:translate-x-0 lg:static ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} flex flex-col`}>
-        <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-800 transform transition-transform duration-300 lg:translate-x-0 lg:static ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} flex flex-col`}>
+        <div className="p-6 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
               <ShieldCheck className="text-white w-6 h-6" />
             </div>
             <div>
-              <h2 className="font-bold text-gray-900 leading-tight">Admin Portal</h2>
-              <p className="text-xs text-gray-500">Kazi Office Durgapur</p>
+              <h2 className="font-bold text-gray-900 dark:text-white leading-tight">Admin Portal</h2>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Kazi Office Durgapur</p>
             </div>
           </div>
-          <button onClick={() => setIsMobileMenuOpen(false)} className="lg:hidden p-2 text-gray-500">
+          <button onClick={() => setIsMobileMenuOpen(false)} className="lg:hidden p-2 text-gray-500 dark:text-gray-400">
             <X className="w-6 h-6" />
           </button>
         </div>
@@ -156,13 +178,13 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           <button
             onClick={() => navigate('/')}
-            className="w-full flex items-center gap-3 px-4 py-3 mb-4 rounded-lg transition-colors text-gray-600 hover:bg-gray-50 hover:text-primary font-medium border border-gray-100"
+            className="w-full flex items-center gap-3 px-4 py-3 mb-4 rounded-lg transition-colors text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-primary dark:hover:text-primary font-medium border border-gray-100 dark:border-slate-800"
           >
             <ArrowLeft className="w-5 h-5" />
             Back to Website
           </button>
 
-          <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 px-4">Menu</div>
+          <div className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2 px-4">Menu</div>
           
           {[
             { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
@@ -181,7 +203,7 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
               className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-colors ${
                 activeTab === item.id 
                   ? 'bg-primary/10 text-primary font-medium' 
-                  : 'text-gray-600 hover:bg-gray-50'
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800'
               }`}
             >
               <div className="flex items-center gap-3">
@@ -197,15 +219,15 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-gray-100">
-          <div className="bg-gray-50 rounded-xl p-4 mb-4">
-            <p className="text-xs text-gray-500 mb-1">Logged in as</p>
-            <p className="text-sm font-bold text-gray-900 truncate">{user.name}</p>
-            <p className="text-xs text-gray-400 truncate">{user.email}</p>
+        <div className="p-4 border-t border-gray-100 dark:border-slate-800">
+          <div className="bg-gray-50 dark:bg-slate-800 rounded-xl p-4 mb-4">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Logged in as</p>
+            <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{user.name}</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 truncate">{user.email}</p>
           </div>
           <button 
             onClick={onLogout}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-red-100 text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-red-100 dark:border-red-900/30 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
           >
             <LogOut className="w-4 h-4" />
             Logout
@@ -216,9 +238,9 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Header */}
-        <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 sm:px-8 relative z-30">
+        <header className="h-16 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 flex items-center justify-between px-4 sm:px-8 relative z-30 transition-colors duration-200">
           <div className="flex items-center gap-4 flex-1 max-w-md">
-            <button onClick={() => setIsMobileMenuOpen(true)} className="lg:hidden p-2 text-gray-500">
+            <button onClick={() => setIsMobileMenuOpen(true)} className="lg:hidden p-2 text-gray-500 dark:text-gray-400">
               <Menu className="w-6 h-6" />
             </button>
             <div className="relative w-full">
@@ -226,16 +248,20 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
               <input 
                 type="text" 
                 placeholder="Search records..." 
-                className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary dark:text-white transition-colors"
               />
             </div>
           </div>
           
           <div className="flex items-center gap-2 sm:gap-4 relative">
-            <button onClick={handleNotificationClick} className="p-2 text-gray-400 hover:text-primary relative">
+            <button onClick={toggleTheme} className="p-2 text-gray-400 hover:text-primary dark:hover:text-accent relative">
+              {isDark ? <Sun className="w-5 h-5 text-accent" /> : <Moon className="w-5 h-5 text-primary" />}
+            </button>
+            
+            <button onClick={handleNotificationClick} className="p-2 text-gray-400 hover:text-primary dark:hover:text-accent relative">
               <Bell className="w-5 h-5" />
               {unreadCount > 0 && (
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
               )}
             </button>
             
@@ -246,31 +272,31 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="absolute top-full right-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50"
+                  className="absolute top-full right-0 mt-2 w-80 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-gray-100 dark:border-slate-700 overflow-hidden z-50"
                 >
-                  <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                    <h3 className="font-bold text-gray-900">Notifications</h3>
+                  <div className="p-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-900/50">
+                    <h3 className="font-bold text-gray-900 dark:text-white">Notifications</h3>
                     <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-medium">
                       {unreadCount} New
                     </span>
                   </div>
                   <div className="max-h-80 overflow-y-auto">
                     {appointments.filter(a => !a.isRead).length === 0 ? (
-                      <div className="p-6 text-center text-gray-500 text-sm">
+                      <div className="p-6 text-center text-gray-500 dark:text-gray-400 text-sm">
                         No new notifications
                       </div>
                     ) : (
                       appointments.filter(a => !a.isRead).map(app => (
-                        <div key={app._id} className="p-4 border-b border-gray-50 hover:bg-gray-50 transition-colors cursor-pointer" onClick={() => {
+                        <div key={app._id} className="p-4 border-b border-gray-50 dark:border-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer" onClick={() => {
                           markAsRead(app._id);
                           navigate('/admin/appointments');
                           setShowNotifications(false);
                         }}>
                           <div className="flex justify-between items-start mb-1">
-                            <span className="text-sm font-bold text-gray-900">{app.name}</span>
-                            <span className="text-xs text-gray-500">{new Date(app.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                            <span className="text-sm font-bold text-gray-900 dark:text-white">{app.name}</span>
+                            <span className="text-xs text-gray-500 dark:text-gray-400">{new Date(app.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                           </div>
-                          <p className="text-xs text-gray-600 mb-2">Requested a {app.service} appointment.</p>
+                          <p className="text-xs text-gray-600 dark:text-gray-300 mb-2">Requested a {app.service} appointment.</p>
                           <div className="flex items-center gap-2 text-xs text-primary font-medium">
                             <Calendar className="w-3 h-3" /> {app.date} at {app.time}
                           </div>
@@ -278,7 +304,7 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
                       ))
                     )}
                   </div>
-                  <div className="p-3 border-t border-gray-100 text-center">
+                  <div className="p-3 border-t border-gray-100 dark:border-slate-700 text-center">
                     <button 
                       onClick={() => {
                         navigate('/admin/appointments');
@@ -293,13 +319,13 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
               )}
             </AnimatePresence>
 
-            <div className="h-8 w-px bg-gray-200 mx-1 sm:mx-2"></div>
+            <div className="h-8 w-px bg-gray-200 dark:bg-slate-700 mx-1 sm:mx-2"></div>
             <div className="flex items-center gap-3">
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                <p className="text-xs text-emerald-600 font-medium">Administrator</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</p>
+                <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">Administrator</p>
               </div>
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center font-bold text-sm sm:text-base">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-full flex items-center justify-center font-bold text-sm sm:text-base">
                 {user.name.charAt(0)}
               </div>
             </div>
@@ -313,8 +339,8 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
               <>
                 <div className="flex items-center justify-between mb-8">
                   <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-                    <p className="text-gray-500">Welcome back! Here's what's happening today.</p>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Admin Dashboard</h1>
+                    <p className="text-gray-500 dark:text-gray-400">Welcome back! Here's what's happening today.</p>
                   </div>
                   <button className="bg-primary text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-emerald-900 transition-colors shadow-sm">
                     <Plus className="w-4 h-4" />
@@ -330,13 +356,13 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.1 }}
-                      className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"
+                      className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm transition-colors"
                     >
-                      <div className={`w-12 h-12 ${stat.bg} rounded-xl flex items-center justify-center mb-4`}>
+                      <div className={`w-12 h-12 ${stat.bg} dark:bg-opacity-10 rounded-xl flex items-center justify-center mb-4`}>
                         <stat.icon className={`w-6 h-6 ${stat.color}`} />
                       </div>
-                      <p className="text-sm text-gray-500 font-medium">{stat.label}</p>
-                      <h3 className="text-2xl font-bold text-gray-900 mt-1">{stat.value}</h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">{stat.label}</p>
+                      <h3 className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stat.value}</h3>
                     </motion.div>
                   ))}
                 </div>
@@ -344,41 +370,41 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
                 {/* Content Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                   {/* Recent Activities */}
-                  <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-                    <div className="p-6 border-b border-gray-50 flex items-center justify-between">
-                      <h3 className="font-bold text-gray-900">Recent Activities</h3>
+                  <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden transition-colors">
+                    <div className="p-6 border-b border-gray-50 dark:border-slate-800 flex items-center justify-between">
+                      <h3 className="font-bold text-gray-900 dark:text-white">Recent Activities</h3>
                       <button className="text-primary text-sm font-medium hover:underline">View All</button>
                     </div>
                     <div className="overflow-x-auto">
                       <table className="w-full text-left">
                         <thead>
-                          <tr className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
+                          <tr className="bg-gray-50 dark:bg-slate-800/50 text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
                             <th className="px-6 py-4 font-semibold">Type</th>
                             <th className="px-6 py-4 font-semibold">Name</th>
                             <th className="px-6 py-4 font-semibold">Date</th>
                             <th className="px-6 py-4 font-semibold">Status</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-50">
+                        <tbody className="divide-y divide-gray-50 dark:divide-slate-800">
                           {recentActivities.map((activity) => (
-                            <tr key={activity.id} className="hover:bg-gray-50 transition-colors">
+                            <tr key={activity.id} className="hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
                               <td className="px-6 py-4">
                                 <span className={`px-2 py-1 rounded-md text-xs font-medium ${
-                                  activity.type === 'Marriage' ? 'bg-blue-50 text-blue-600' : 
-                                  activity.type === 'Divorce' ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-600'
+                                  activity.type === 'Marriage' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 
+                                  activity.type === 'Divorce' ? 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400' : 'bg-amber-50 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400'
                                 }`}>
                                   {activity.type}
                                 </span>
                               </td>
-                              <td className="px-6 py-4 text-sm font-medium text-gray-900">{activity.name}</td>
-                              <td className="px-6 py-4 text-sm text-gray-500">{activity.date}</td>
+                              <td className="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">{activity.name}</td>
+                              <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{activity.date}</td>
                               <td className="px-6 py-4">
                                 <div className="flex items-center gap-2">
                                   <div className={`w-2 h-2 rounded-full ${
                                     activity.status === 'Completed' ? 'bg-emerald-500' : 
                                     activity.status === 'Pending' ? 'bg-amber-500' : 'bg-blue-500'
                                   }`}></div>
-                                  <span className="text-sm text-gray-700">{activity.status}</span>
+                                  <span className="text-sm text-gray-700 dark:text-gray-300">{activity.status}</span>
                                 </div>
                               </td>
                             </tr>
@@ -401,8 +427,8 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
                       </div>
                     </div>
 
-                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-                      <h3 className="font-bold text-gray-900 mb-4">Quick Links</h3>
+                    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6 transition-colors">
+                      <h3 className="font-bold text-gray-900 dark:text-white mb-4">Quick Links</h3>
                       <div className="space-y-3">
                         {[
                           'Print Certificates',
@@ -412,7 +438,7 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
                         ].map((link, idx) => (
                           <button 
                             key={idx}
-                            className="w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-xl text-sm text-gray-700 font-medium transition-colors flex items-center justify-between"
+                            className="w-full text-left px-4 py-3 bg-gray-50 dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-xl text-sm text-gray-700 dark:text-gray-300 font-medium transition-colors flex items-center justify-between"
                           >
                             {link}
                             <Plus className="w-4 h-4 text-gray-400" />
@@ -426,11 +452,11 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
             )}
 
             {activeTab === 'appointments' && (
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-                <div className="p-6 border-b border-gray-50 flex items-center justify-between">
-                  <h3 className="font-bold text-gray-900 text-xl">Appointments</h3>
+              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden transition-colors">
+                <div className="p-6 border-b border-gray-50 dark:border-slate-800 flex items-center justify-between">
+                  <h3 className="font-bold text-gray-900 dark:text-white text-xl">Appointments</h3>
                   <div className="flex gap-2">
-                    <span className="bg-amber-50 text-amber-600 px-3 py-1 rounded-full text-sm font-medium">
+                    <span className="bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 px-3 py-1 rounded-full text-sm font-medium">
                       {appointments.filter(a => a.status === 'Pending').length} Pending
                     </span>
                   </div>
@@ -438,7 +464,7 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left">
                     <thead>
-                      <tr className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
+                      <tr className="bg-gray-50 dark:bg-slate-800/50 text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
                         <th className="px-6 py-4 font-semibold">Client</th>
                         <th className="px-6 py-4 font-semibold">Service</th>
                         <th className="px-6 py-4 font-semibold">Date & Time</th>
@@ -447,44 +473,44 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
                         <th className="px-6 py-4 font-semibold">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-50">
+                    <tbody className="divide-y divide-gray-50 dark:divide-slate-800">
                       {appointments.length === 0 ? (
                         <tr>
-                          <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                          <td colSpan={6} className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
                             No appointments found.
                           </td>
                         </tr>
                       ) : (
                         appointments.map((app) => (
-                          <tr key={app._id} className={`transition-colors ${!app.isRead ? 'bg-primary/5' : 'hover:bg-gray-50'}`}>
+                          <tr key={app._id} className={`transition-colors ${!app.isRead ? 'bg-primary/5 dark:bg-primary/10' : 'hover:bg-gray-50 dark:hover:bg-slate-800/50'}`}>
                             <td className="px-6 py-4">
-                              <div className="font-medium text-gray-900 flex items-center gap-2">
+                              <div className="font-medium text-gray-900 dark:text-white flex items-center gap-2">
                                 {!app.isRead && <span className="w-2 h-2 bg-primary rounded-full"></span>}
                                 {app.name}
                               </div>
-                              <div className="text-xs text-gray-500 mt-1">Submitted: {new Date(app.createdAt).toLocaleDateString()}</div>
+                              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Submitted: {new Date(app.createdAt).toLocaleDateString()}</div>
                             </td>
                             <td className="px-6 py-4">
-                              <span className="px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
+                              <span className="px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300">
                                 {app.service}
                               </span>
                             </td>
                             <td className="px-6 py-4">
-                              <div className="text-sm text-gray-900 flex items-center gap-1"><Calendar className="w-3 h-3"/> {app.date}</div>
-                              <div className="text-xs text-gray-500 flex items-center gap-1 mt-1"><Clock className="w-3 h-3"/> {app.time}</div>
+                              <div className="text-sm text-gray-900 dark:text-white flex items-center gap-1"><Calendar className="w-3 h-3"/> {app.date}</div>
+                              <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1 mt-1"><Clock className="w-3 h-3"/> {app.time}</div>
                             </td>
                             <td className="px-6 py-4">
-                              <div className="text-sm text-gray-900">{app.phone}</div>
-                              {app.email && <div className="text-xs text-gray-500 mt-1">{app.email}</div>}
+                              <div className="text-sm text-gray-900 dark:text-white">{app.phone}</div>
+                              {app.email && <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">{app.email}</div>}
                             </td>
                             <td className="px-6 py-4">
                               <select 
                                 value={app.status}
                                 onChange={(e) => updateStatus(app._id, e.target.value)}
                                 className={`text-sm rounded-md px-2 py-1 border-0 font-medium cursor-pointer focus:ring-0 ${
-                                  app.status === 'Confirmed' ? 'bg-emerald-50 text-emerald-700' :
-                                  app.status === 'Cancelled' ? 'bg-red-50 text-red-700' :
-                                  'bg-amber-50 text-amber-700'
+                                  app.status === 'Confirmed' ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400' :
+                                  app.status === 'Cancelled' ? 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400' :
+                                  'bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400'
                                 }`}
                               >
                                 <option value="Pending">Pending</option>
@@ -493,14 +519,23 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
                               </select>
                             </td>
                             <td className="px-6 py-4">
-                              {!app.isRead && (
+                              <div className="flex items-center gap-3">
+                                {!app.isRead && (
+                                  <button 
+                                    onClick={() => markAsRead(app._id)}
+                                    className="text-xs text-primary hover:underline font-medium"
+                                  >
+                                    Mark Read
+                                  </button>
+                                )}
                                 <button 
-                                  onClick={() => markAsRead(app._id)}
-                                  className="text-xs text-primary hover:underline font-medium"
+                                  onClick={() => deleteAppointment(app._id)}
+                                  className="text-gray-400 hover:text-red-500 transition-colors"
+                                  title="Delete Appointment"
                                 >
-                                  Mark Read
+                                  <Trash2 className="w-4 h-4" />
                                 </button>
-                              )}
+                              </div>
                             </td>
                           </tr>
                         ))
@@ -517,8 +552,8 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
             
             {/* Other tabs can go here */}
             {['registrations', 'users', 'settings'].includes(activeTab) && (
-              <div className="bg-white rounded-lg shadow-md p-6 flex items-center justify-center h-64">
-                <p className="text-gray-500 text-lg">This section is under construction.</p>
+              <div className="bg-white dark:bg-slate-900 rounded-lg shadow-md p-6 flex items-center justify-center h-64 transition-colors">
+                <p className="text-gray-500 dark:text-gray-400 text-lg">This section is under construction.</p>
               </div>
             )}
           </div>
