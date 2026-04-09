@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Notice1Generator from './Notice1Generator';
+import Notice2Generator from './Notice2Generator';
 import SettingsComponent from './Settings';
 
 interface AdminPanelProps {
@@ -570,6 +571,18 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
                         <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-2">Notice 1</h3>
                         <p className="text-sm text-gray-500 dark:text-gray-400">Generate Talaqu-e-Hassan / Aahsan notice document.</p>
                       </div>
+                      
+                      {/* Notice 2 Tile */}
+                      <div 
+                        onClick={() => setSelectedDocument('notice2')}
+                        className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl p-6 cursor-pointer hover:shadow-md hover:border-primary dark:hover:border-primary transition-all group"
+                      >
+                        <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                          <FileText className="w-6 h-6" />
+                        </div>
+                        <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-2">Notice 2</h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Generate 2nd Talaque notice document.</p>
+                      </div>
                       {/* Add more tiles here in the future */}
                     </div>
                   </div>
@@ -582,6 +595,7 @@ export default function AdminPanel({ user, onLogout }: AdminPanelProps) {
                       <ArrowLeft className="w-4 h-4 mr-1" /> Back to Documents
                     </button>
                     {selectedDocument === 'notice1' && <Notice1Generator />}
+                    {selectedDocument === 'notice2' && <Notice2Generator />}
                   </div>
                 )}
               </div>
